@@ -1,29 +1,27 @@
 ## Why [Tailwindcss](https://tailwindcss.com/)
+
 - A Utility first CSS framework.
   - No need to create your own classes.
     - You don't have to name it.
     - No need to fine-tune your style.
   - Easy to support responsive and dark mode.
-  - Good performance.
-    - Unused classes can be purge in the production environment.
-Reference [Tailwindcss course #1](https://www.youtube.com/watch?v=5TymbaeyV-0&t=630s)
+  - Good performance. - Unused classes can be purge in the production environment.
+    Reference [Tailwindcss course #1](https://www.youtube.com/watch?v=5TymbaeyV-0&t=630s)
 
 ## Differences from [bootstrap](https://getbootstrap.jp/)
+
 1. High flexibility.
-    - However, the amount of text is less in bootstrap than in tailwindcss.
+   - However, the amount of text is less in bootstrap than in tailwindcss.
 2. Small file size.
-    - Using Purge-css will increase performance.
-      - example Tailwindcss under 10KB, bootstrap about 230KB
-3. No JavaScript dependencies.
-    - Works well with javascript frameworks
-      - bootstrap's javascript is hidden and conflicts with javascript frameworks, making it difficult to use.
-    - If you need Javascript, use [headlessUI](https://headlessui.dev/).
-Reference [Tailwindcss course #2](https://www.youtube.com/watch?v=T_WIbcvB5GM)
+   - Using Purge-css will increase performance.
+     - example Tailwindcss under 10KB, bootstrap about 230KB
+3. No JavaScript dependencies. - Works well with javascript frameworks - bootstrap's javascript is hidden and conflicts with javascript frameworks, making it difficult to use. - If you need Javascript, use [headlessUI](https://headlessui.dev/).
+   Reference [Tailwindcss course #2](https://www.youtube.com/watch?v=T_WIbcvB5GM)
 
 ## How to set up Tailwindcss
+
 - [Use with frameworks](https://tailwindcss.com/docs/installation#integration-guides)
-- [installing Tailwind CSS as a PostCSS plugin](https://tailwindcss.com/docs/installation#installing-tailwind-css-as-a-post-css-plugin)
-    - What is [postcss](https://en.wikipedia.org/wiki/PostCSS)?
+- [installing Tailwind CSS as a PostCSS plugin](https://tailwindcss.com/docs/installation#installing-tailwind-css-as-a-post-css-plugin) - What is [postcss](https://en.wikipedia.org/wiki/PostCSS)?
   - Example
     - `cd desktop`
     - `mkdir your-directory-name`
@@ -56,24 +54,26 @@ Reference [Tailwindcss course #2](https://www.youtube.com/watch?v=T_WIbcvB5GM)
   +  "build": "postcss styles.css -o dist.css"
   },
   ```
-    - Meaning: Output ( -o ) the build styles.css file to dist.css
+      - Meaning: Output ( -o ) the build styles.css file to dist.css
   - `npm uninstall postcss`
   - `npm i -D postcss-cli`
     - Make `npm run build` available
-  - After executing the build command, the styling can be checked in the browser.
-    - Paste the path of the HTML file into the url field of the browser.
-Reference [Tailwindcss course #3](https://www.youtube.com/watch?v=mzRxqknA9Jg)
+  - After executing the build command, the styling can be checked in the browser. - Paste the path of the HTML file into the url field of the browser.
+    Reference [Tailwindcss course #3](https://www.youtube.com/watch?v=mzRxqknA9Jg)
 
 ## Use Purge and Minify to build in production environment
+
 - What is `autoprefixer`?
+
   - One that automatically adds a vendor prefix.
   - By adding vendorprevix, the same css can be applied to different browsers.
-<br/>
+    <br/>
 
 - Example: `purge` css that is not used in index.html
   - tailwind.config.js
     - Can be specified as multiple arrays
     - Glob patterns are available
+
 ```diff
 module.exports = {
 +  purge: ["./index.html"],
@@ -87,16 +87,19 @@ module.exports = {
   plugins: [],
 }
 ```
-  - package.json
+
+- package.json
+
 ```diff
 "scripts": {
 -  "build": "postcss styles.css -o dist.css"
 +  "build": "NODE_ENV=production postcss styles.css -o dist.css"
 },
 ```
-  - `npm i -D cssnano`
-    - Use `minify` to make it even lighter.
-  - Add `cssnano: {},` to `postcss.config.js`.
+
+- `npm i -D cssnano`
+  - Use `minify` to make it even lighter.
+- Add `cssnano: {},` to `postcss.config.js`.
 
 ```diff
 module.exports = {
@@ -107,8 +110,10 @@ plugins: {
   },
 }
 ```
-  - Building the development environment
-    - Add `"dev..."` to `package.json`.
+
+- Building the development environment
+  - Add `"dev..."` to `package.json`.
+
 ```diff
 "scripts": {
 +  "dev": " postcss styles.css -o dist.css",
@@ -116,9 +121,9 @@ plugins: {
 },
 ```
 
- - Disable minify in the development environment.
-  - Functionize `postcss.config.js`.
-    - Enables reference to context.
+- Disable minify in the development environment.
+- Functionize `postcss.config.js`.
+  - Enables reference to context.
 
 ```diff
 module.exports = (ctx) => {
@@ -132,5 +137,49 @@ module.exports = (ctx) => {
 };
 ```
 
-
 Reference [Tailwindcss course #4](https://www.youtube.com/watch?v=2MAJuoJcOw0)
+
+## [Just in time](https://tailwindcss.com/docs/just-in-time-mode)
+
+- Lightning fast build times.
+
+- Every variant is enabled out of the box.
+
+  - example `sm:hover:active:disabled:opacity-75`
+
+- Generate arbitrary styles without writing custom CSS.
+
+  - example `top: -113px` → `top-[-113px]`
+
+- Better browser performance in development.
+
+#### Hou to use
+
+- tailwind.config.js
+
+```diff
+module.exports = {
++  mode: "jit",
+  purge: ["./index.html"],
+  darkMode: "media", // or 'media' or 'class'
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+- package.json
+
+```diff
+"scripts": {
+-  "dev": " postcss styles.css -o dist.css",
++  "dev": " TAILWIND_MODE=watch postcss styles.css -o dist.css -w",
+  "build": "NODE_ENV=production postcss styles.css -o dist.css"
+},
+```
+
+Reference [Tailwindcss course #5](https://www.youtube.com/watch?v=TfR_0zbjKOM)
