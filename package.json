@@ -4,7 +4,7 @@
   "description": "- A Utility first CSS framework.   - No need to create your own classes.     - You don't have to name it.     - No need to fine-tune your style.   - Easy to support responsive and dark mode.   - Good performance.     - Unused classes can be purge in the production environment. Reference [Tailwindcss course #1](https://www.youtube.com/watch?v=5TymbaeyV-0&t=630s)",
   "main": "index.js",
   "scripts": {
-    "dev": " postcss styles.css -o dist.css",
+    "dev": " TAILWIND_MODE=watch postcss styles.css -o dist.css -w",
     "build": "NODE_ENV=production postcss styles.css -o dist.css"
   },
   "repository": {
